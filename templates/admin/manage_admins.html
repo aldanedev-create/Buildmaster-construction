@@ -1,0 +1,94 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Manage Admins{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Manage Administrators</h1>
+    <button class="btn-primary" onclick="showCreateForm()"><i class="fas fa-plus"></i> Create Admin</button>
+</div>
+
+<div id="createAdminModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Create New Admin Account</h2>
+        <form method="POST" action="/admin/create_admin">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label>Role</label>
+                <select name="role" required>
+                    <option value="ProjectManager">Project Manager</option>
+                    <option value="SuperAdmin">Super Admin</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Temporary Password</label>
+                <input type="password" name="password" required>
+                <small>User should change this on first login</small>
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" class="btn-primary">Create</button>
+                <button type="button" class="btn-secondary" onclick="hideCreateForm()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        {% for admin in admins %}
+        <tr>
+            <td>{{ admin.user_id }}</td>
+            <td>{{ admin.name }}</td>
+            <td>{{ admin.email }}</td>
+            <td>
+                <span class="badge badge-{{ 'warning' if admin.role == 'SuperAdmin' else 'info' }}">
+                    {{ admin.role }}
+                </span>
+            </td>
+            <td>
+                <span class="badge badge-{{ 'success' if admin.account_status == 'Active' else 'danger' }}">
+                    {{ admin.account_status }}
+                </span>
+            </td>
+            <td>{{ admin.created_at[:10] }}</td>
+            <td>
+                {% if admin.user_id != session.user_id %}
+                <form method="POST" action="/admin/delete_admin/{{ admin.user_id }}" style="display: inline;" 
+                      onsubmit="return confirm('Delete this admin account?')">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn-small btn-danger">Delete</button>
+                </form>
+                {% else %}
+                <span class="text-muted">Current</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function showCreateForm() {
+    document.getElementById('createAdminModal').style.display = 'flex';
+}
+function hideCreateForm() {
+    document.getElementById('createAdminModal').style.display = 'none';
+}
+</script>
+{% endblock %}

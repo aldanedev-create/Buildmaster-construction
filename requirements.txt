@@ -1,0 +1,9 @@
+# Core runtime
+Flask>=3.0,<4
+python-dotenv>=1.0
+requests>=2.31
+
+# Development / testing
+pytest>=8.0
+
+need to have more responsive web page

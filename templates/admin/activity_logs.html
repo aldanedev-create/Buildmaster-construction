@@ -1,0 +1,72 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Activity Logs{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Activity Logs</h1>
+    <div class="filter-controls">
+        <input type="text" id="searchLogs" placeholder="Search logs..." class="search-input">
+        <select id="filterAction" class="filter-select">
+            <option value="">All Actions</option>
+            <option value="Login">Login</option>
+            <option value="Logout">Logout</option>
+            <option value="Project">Project</option>
+            <option value="Service">Service</option>
+            <option value="2FA">2FA</option>
+        </select>
+    </div>
+</div>
+
+<div class="logs-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>User</th>
+                <th>Action</th>
+                <th>Details</th>
+                <th>IP Address</th>
+            </tr>
+        </thead>
+        <tbody id="logsTableBody">
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.timestamp }}</td>
+                <td>{{ log.user_email or 'System' }}</td>
+                <td><span class="badge badge-{{ log.action|lower|replace(' ', '-') }}">{{ log.action }}</span></td>
+                <td>{{ log.details }}</td>
+                <td><code>{{ log.ip_address }}</code></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Search and filter functionality
+    const searchInput = document.getElementById('searchLogs');
+    const filterSelect = document.getElementById('filterAction');
+    const tableBody = document.getElementById('logsTableBody');
+    
+    function filterLogs() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filterAction = filterSelect.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+        
+        for (let row of rows) {
+            const text = row.textContent.toLowerCase();
+            const actionCell = row.cells[2];
+            const action = actionCell ? actionCell.textContent.toLowerCase() : '';
+            
+            const matchesSearch = text.includes(searchTerm);
+            const matchesFilter = !filterAction || action.includes(filterAction);
+            
+            row.style.display = (matchesSearch && matchesFilter) ? '' : 'none';
+        }
+    }
+    
+    searchInput.addEventListener('keyup', filterLogs);
+    filterSelect.addEventListener('change', filterLogs);
+</script>
+{% endblock %}

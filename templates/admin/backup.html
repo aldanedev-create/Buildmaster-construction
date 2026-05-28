@@ -1,0 +1,56 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Backup Management{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Backup Management</h1>
+    <form method="POST" action="/admin/create_backup">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit" class="btn-success"><i class="fas fa-database"></i> Create New Backup</button>
+    </form>
+</div>
+
+<div class="backup-info">
+    <div class="info-card">
+        <i class="fas fa-info-circle"></i>
+        <p>Backups include your database and all uploaded files. Regular backups are recommended for data safety.</p>
+    </div>
+</div>
+
+<div class="backups-list">
+    <h3>Available Backups</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Filename</th>
+                <th>Size</th>
+                <th>Type</th>
+                <th>Created By</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for backup in backups %}
+            <tr>
+                <td>{{ backup.backup_filename }}</td>
+                <td>{{ (backup.backup_size / 1024 / 1024)|round(2) }} MB</td>
+                <td><span class="badge badge-info">{{ backup.backup_type }}</span></td>
+                <td>{{ backup.created_by or 'System' }}</td>
+                <td>{{ backup.created_at }}</td>
+                <td>
+                    <a href="/admin/download_backup/{{ backup.backup_filename }}" class="btn-small btn-primary">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center">No backups found. Click "Create New Backup" to get started.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

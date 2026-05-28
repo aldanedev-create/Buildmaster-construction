@@ -1,0 +1,101 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Dashboard{% endblock %}
+
+{% block admin_content %}
+<h1>Dashboard</h1>
+
+<div class="stats-grid">
+    {% if session.role == 'SuperAdmin' %}
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-info">
+            <h3>{{ stats.total_users }}</h3>
+            <p>Total Users</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+        <div class="stat-info">
+            <h3>{{ stats.total_projects }}</h3>
+            <p>Total Projects</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+        <div class="stat-info">
+            <h3>{{ stats.pending_projects }}</h3>
+            <p>Pending Projects</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-tools"></i></div>
+        <div class="stat-info">
+            <h3>{{ stats.total_services }}</h3>
+            <p>Active Services</p>
+        </div>
+    </div>
+    {% else %}
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+        <div class="stat-info">
+            <h3>{{ stats.assigned_projects }}</h3>
+            <p>Assigned Projects</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="stat-info">
+            <h3>{{ stats.completed_by_me }}</h3>
+            <p>Completed</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+        <div class="stat-info">
+            <h3>{{ stats.pending_my }}</h3>
+            <p>In Progress</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% if session.role == 'SuperAdmin' %}
+<div class="recent-activities">
+    <h2>Maintenance Mode</h2>
+    <form method="POST" action="/admin/maintenance" class="maintenance-admin-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label class="toggle-row">
+            <input type="checkbox" name="maintenance_mode" {% if stats.maintenance_mode %}checked{% endif %}>
+            <span>Show maintenance page to public visitors and customers</span>
+        </label>
+        <div class="form-group">
+            <label>Maintenance Message</label>
+            <textarea name="maintenance_message" rows="3">{{ stats.maintenance_message }}</textarea>
+        </div>
+        <button type="submit" class="btn-primary">Save Maintenance Settings</button>
+    </form>
+</div>
+{% endif %}
+
+{% if session.role == 'SuperAdmin' and stats.recent_activities %}
+<div class="recent-activities">
+    <h2>Recent Activities</h2>
+    <table class="data-table">
+        <thead>
+            <tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+            {% for activity in stats.recent_activities %}
+            <tr>
+                <td>{{ activity.timestamp }}</td>
+                <td>{{ activity.user_email or 'System' }}</td>
+                <td><span class="badge">{{ activity.action }}</span></td>
+                <td>{{ activity.details }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Customer Report{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Customer Report</h1>
+    <a class="btn-secondary" href="/admin/reports/export_csv/customers">Export CSV</a>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr><th>Customer</th><th>Email</th><th>Phone</th><th>Status</th><th>Projects</th><th>Latest Project</th><th>Last Login</th></tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.account_status }}</td>
+            <td>{{ customer.project_count }}</td>
+            <td>{{ customer.latest_project or 'N/A' }}</td>
+            <td>{{ customer.last_login or 'Never' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7">No customers found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

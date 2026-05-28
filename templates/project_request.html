@@ -1,0 +1,70 @@
+{% extends "includes/header.html" %}
+
+{% block title %}Request a Quote{% endblock %}
+
+{% block content %}
+<section class="request-header">
+    <div class="container">
+        <h1>Request a Quote</h1>
+        <p>Tell us about your project and we'll get back to you within 24 hours</p>
+    </div>
+</section>
+
+<div class="form-container">
+    <form method="POST" action="/request-quote" id="quoteForm">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        
+        <div class="form-group">
+            <label for="service_id">Service Type *</label>
+            <select name="service_id" id="service_id" required>
+                <option value="">Select a service</option>
+                {% for service in services %}
+                <option value="{{ service.service_id }}" {% if request.args.get('service')|int == service.service_id %}selected{% endif %}>
+                    {{ service.service_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Project Description *</label>
+            <textarea name="description" id="description" rows="5" required placeholder="Describe your project in detail..."></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="budget">Estimated Budget ($)</label>
+            <input type="number" name="budget" id="budget" step="1000" placeholder="e.g., 50000">
+        </div>
+        
+        <div class="form-group">
+            <label for="location">Project Location *</label>
+            <input type="text" name="location" id="location" required placeholder="Full address">
+        </div>
+        
+        <div class="form-group">
+            <label>Preferred Contact Method</label>
+            <div class="radio-group">
+                <label><input type="radio" name="contact_method" value="email" checked> Email</label>
+                <label><input type="radio" name="contact_method" value="whatsapp"> WhatsApp</label>
+                <label><input type="radio" name="contact_method" value="phone"> Phone</label>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-primary">Submit Request</button>
+    </form>
+    
+    <div class="alternative-contact">
+        <p>Prefer to talk? <a href="https://wa.me/1234567890?text=Hi%2C%20I'm%20interested%20in%20your%20construction%20services" target="_blank">Chat on WhatsApp</a> or call us at +1 234 567 8900</p>
+    </div>
+</div>
+
+<script>
+document.getElementById('quoteForm')?.addEventListener('submit', function(e) {
+    const description = document.getElementById('description');
+    if (description.value.length < 20) {
+        e.preventDefault();
+        alert('Please provide more details about your project (minimum 20 characters)');
+    }
+});
+</script>
+{% endblock %}

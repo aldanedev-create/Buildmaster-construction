@@ -1,0 +1,19 @@
+{% extends "includes/header.html" %}
+
+{% block title %}Verify 2FA{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Two-Factor Authentication</h2>
+    <p>Please enter the verification code sent to your email address.</p>
+    
+    <form method="POST" action="/verify-2fa">
+        <div class="form-group">
+            <label for="code">Verification Code</label>
+            <input type="text" name="code" id="code" required placeholder="000000" autofocus>
+        </div>
+        
+        <button type="submit" class="btn-primary btn-block">Verify</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Mini SIEM{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Mini SIEM</h1>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.open_alerts }}</h3><p>Open Alerts</p></div></div>
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.high_alerts }}</h3><p>High Severity</p></div></div>
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.events_today }}</h3><p>Events Today</p></div></div>
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.unique_ips }}</h3><p>Unique IPs 24h</p></div></div>
+</div>
+
+<h2>Alerts</h2>
+<table class="data-table">
+    <thead>
+        <tr><th>Time</th><th>Severity</th><th>Rule</th><th>Description</th><th>IP</th><th>Status</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+        {% for alert in alerts %}
+        <tr>
+            <td>{{ alert.created_at }}</td>
+            <td><span class="badge">{{ alert.severity }}</span></td>
+            <td>{{ alert.rule_name }}</td>
+            <td>{{ alert.description }}</td>
+            <td>{{ alert.source_ip or 'N/A' }}</td>
+            <td>{{ alert.status }}</td>
+            <td>
+                {% if alert.status == 'Open' %}
+                <form method="POST" action="/admin/siem/alerts/{{ alert.alert_id }}/resolve">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn-small btn-primary">Resolve</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7">No alerts yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Recent Events</h2>
+<table class="data-table">
+    <thead>
+        <tr><th>Time</th><th>User</th><th>Action</th><th>Details</th><th>IP</th></tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+            <td>{{ event.timestamp }}</td>
+            <td>{{ event.user_email or 'System' }}</td>
+            <td>{{ event.action }}</td>
+            <td>{{ event.details }}</td>
+            <td>{{ event.ip_address }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

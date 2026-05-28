@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>{% block title %}Nigel'sConstruction Co.{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animation.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/maintenance.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/">
+                    <img src="{{ url_for('static', filename='images/logo-hero.png') }}" alt="Construction Co.">
+                   <span style="font-size: 12px;">Construction Co Nigel</span>
+                </a>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">about</a></li>
+                <li><a href="/services">Services</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                {% if session.user_id %}
+                    <li><a href="/projects">My Projects</a></li>
+                {% endif %}
+                <li><a href="/contact">Contact</a></li>
+                {% if session.user_id %}
+                    <li class="dropdown">
+                        <a href="#"><i class="fas fa-user"></i> {{ session.user_name }} <i class="fas fa-caret-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/account"><i class="fas fa-cog"></i> Account</a></li>
+                            {% if session.role in ['SuperAdmin', 'ProjectManager'] %}
+                                <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Admin Panel</a></li>
+                            {% endif %}
+                            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                    <li><a href="/register" class="btn-register">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div id="loader">
+  <div class="loader-text">Loading...</div>
+</div>
+    
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/18765550123?text=Hi%2C%20I'm%20interested%20in%20your%20construction%20services" 
+       class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>BuildMaster Construction</h4>
+                <p>Quality construction services since 2000</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="/about">About Us</a>
+                <a href="/services">Services</a>
+                <a href="/gallery">Gallery</a>
+                <a href="/contact">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <p><i class="fas fa-phone"></i> +1 876 555 0123</p>
+                <p><i class="fas fa-envelope"></i> info@buildmaster.com</p>
+                <p><i class="fab fa-whatsapp"></i> WhatsApp: +1 876 555 0123</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 BuildMaster Construction. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+    <script src="{{ url_for('static', filename='js/animation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

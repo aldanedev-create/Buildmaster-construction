@@ -1,0 +1,24 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Reports{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Reports</h1>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.projects }}</h3><p>Total Projects</p></div></div>
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.pending }}</h3><p>Pending Review</p></div></div>
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.customers }}</h3><p>Customers</p></div></div>
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.messages }}</h3><p>Unread Messages</p></div></div>
+</div>
+
+<div class="report-links">
+    <a class="btn-primary" href="/admin/reports/project_report">Project Report</a>
+    <a class="btn-primary" href="/admin/reports/customer_report">Customer Report</a>
+    <a class="btn-secondary" href="/admin/reports/export_csv/projects">Export Projects CSV</a>
+    <a class="btn-secondary" href="/admin/reports/export_csv/customers">Export Customers CSV</a>
+</div>
+{% endblock %}
+

@@ -1,0 +1,21 @@
+{% extends "includes/header.html" %}
+
+{% block title %}Maintenance{% endblock %}
+
+{% block content %}
+<section class="maintenance-page">
+    <div class="maintenance-panel">
+        <i class="fas fa-tools"></i>
+        <h1>We will be back soon</h1>
+        <p>{{ message }}</p>
+        <div class="maintenance-actions">
+            <a href="https://wa.me/18765550123?text=Hi%2C%20I%20need%20help%20while%20the%20website%20is%20under%20maintenance" class="btn-primary" target="_blank" rel="noopener noreferrer">
+                Contact Us on WhatsApp
+            </a>
+            {% if session.get('role') in ['SuperAdmin', 'ProjectManager'] %}
+            <a href="/admin/dashboard" class="btn-secondary">Admin Dashboard</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

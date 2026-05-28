@@ -1,0 +1,101 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Manage Projects{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Manage Projects</h1>
+    <input type="text" id="searchInput" placeholder="Search projects..." class="search-input">
+</div>
+
+<table class="data-table" id="projectsTable">
+    <thead>
+        <tr>
+            <th>ID</th><th>Customer</th><th>Service</th><th>Location</th><th>Budget</th><th>Status</th><th>Manager</th><th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+        <tr>
+            <td>#{{ project.project_id }}</td>
+            <td>{{ project.customer_name }}</td>
+            <td>{{ project.service_name }}</td>
+            <td>{{ project.location }}</td>
+            <td>${{ '{:,.2f}'.format(project.budget) if project.budget else 'N/A' }}</td>
+            <td>
+                <form method="POST" action="/admin/update_project/{{ project.project_id }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <select name="status" onchange="this.form.submit()">
+                        <option value="Pending" {% if project.status == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Confirmed" {% if project.status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                        <option value="In Progress" {% if project.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Completed" {% if project.status == 'Completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                </form>
+            </td>
+            <td>
+                {% if session.role == 'SuperAdmin' %}
+                <form method="POST" action="/admin/update_project/{{ project.project_id }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <select name="assigned_to" onchange="this.form.submit()">
+                        <option value="">Unassigned</option>
+                        {% for manager in managers %}
+                        <option value="{{ manager.user_id }}" {% if project.assigned_to == manager.user_id %}selected{% endif %}>
+                            {{ manager.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </form>
+                {% else %}
+                    {{ project.manager_name or 'Unassigned' }}
+                {% endif %}
+            </td>
+            <td>
+                <button onclick="showUpdateForm({{ project.project_id }})" class="btn-small">Add Update</button>
+                <a href="/project/{{ project.project_id }}" class="btn-small" target="_blank">View</a>
+            </td>
+        </tr>
+        
+        <!-- Update Form Modal for each project -->
+        <div id="updateModal{{ project.project_id }}" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Add Update to Project #{{ project.project_id }}</h2>
+                <form method="POST" action="/admin/update_project/{{ project.project_id }}" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <div class="form-group">
+                        <label>Update Description</label>
+                        <textarea name="update_description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Image (optional)</label>
+                        <input type="file" name="update_image" accept="image/*">
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="submit" class="btn-primary">Post Update</button>
+                        <button type="button" class="btn-secondary" onclick="hideUpdateForm({{ project.project_id }})">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function showUpdateForm(projectId) {
+    document.getElementById(`updateModal${projectId}`).style.display = 'flex';
+}
+function hideUpdateForm(projectId) {
+    document.getElementById(`updateModal${projectId}`).style.display = 'none';
+}
+
+document.getElementById('searchInput')?.addEventListener('keyup', function() {
+    const searchTerm = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#projectsTable tbody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

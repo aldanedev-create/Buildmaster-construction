@@ -1,0 +1,60 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Manage Customers{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Manage Customers</h1>
+    <input type="text" id="searchInput" placeholder="Search customers..." class="search-input">
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Joined</th><th>Last Login</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer.user_id }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>
+                <span class="badge badge-{{ 'success' if customer.account_status == 'Active' else 'danger' }}">
+                    {{ customer.account_status }}
+                </span>
+            </td>
+            <td>{{ customer.created_at[:10] }}</td>
+            <td>{{ customer.last_login[:10] if customer.last_login else 'Never' }}</td>
+            <td>
+                <form method="POST" action="/admin/toggle_user/{{ customer.user_id }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn-small {% if customer.account_status == 'Active' %}btn-danger{% else %}btn-success{% endif %}" 
+                            onclick="return confirm('{{ 'Block this account?' if customer.account_status == 'Active' else 'Unblock this account?' }}')">
+                        {{ 'Block' if customer.account_status == 'Active' else 'Unblock' }}
+                    </button>
+                </form>
+                <form method="POST" action="/admin/delete_customer/{{ customer.user_id }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn-small btn-danger"
+                            onclick="return confirm('Delete this customer account? This will hide the account and schedule it for permanent deletion.')">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+document.getElementById('searchInput')?.addEventListener('keyup', function() {
+    const searchTerm = this.value.toLowerCase();
+    const rows = document.querySelectorAll('.data-table tbody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

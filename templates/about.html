@@ -1,0 +1,75 @@
+{% extends "includes/header.html" %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<section class="about-hero">
+    <div class="container">
+        <h1>About BuildMaster Construction</h1>
+        <p>Your trusted partner in quality construction</p>
+    </div>
+</section>
+
+<section class="about-content">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2>Our Story</h2>
+                <p>Founded in 2026,  Construction CO Nigel has grown from a small family business  in the construction industry. We specialize in residential and commercial construction, providing top-quality services at competitive prices.</p>
+                
+                <h2>Our Mission</h2>
+                <p>To deliver exceptional construction services that exceed client expectations through quality craftsmanship, innovation, and integrity.</p>
+                
+                <h2>Our Values</h2>
+                <ul>
+                    <li><strong>Quality:</strong> We never compromise on quality</li>
+                    <li><strong>Safety:</strong> Safety is our top priority</li>
+                    <li><strong>Integrity:</strong> Honest and transparent business</li>
+                    <li><strong>Innovation:</strong> Modern techniques and materials</li>
+                </ul>
+            </div>
+            <div class="about-stats">
+                <div class="stat">
+                    <h3>500+</h3>
+                    <p>Projects Completed</p>
+                </div>
+                <div class="stat">
+                    <h3>100+</h3>
+                    <p>Happy Clients</p>
+                </div>
+                <div class="stat">
+                    <h3>15+</h3>
+                    <p>Years Experience</p>
+                </div>
+                <div class="stat">
+                    <h3>20+</h3>
+                    <p>Expert Team Members</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="team">
+    <div class="container">
+        <h2>Our Leadership Team</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='images/team/ceo.jpg') }}" alt="CEO">
+                <h3>Nigel Hutchinson</h3>
+                <p>Founder & Manager</p>
+            </div>
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='images/team/manager.jpg') }}" alt="Project Manager">
+                <h3>Sarah Johnson</h3>
+                <p>Project Director</p>
+            </div>
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='images/team/aldane.jpg') }}" alt="Project Manager">
+                <h3>Aldane Hutchinson</h3>
+                <p>It Specialist</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

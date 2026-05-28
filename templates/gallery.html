@@ -1,0 +1,48 @@
+{% extends "includes/header.html" %}
+
+{% block title %}Gallery{% endblock %}
+
+{% block content %}
+<section class="gallery-header">
+    <div class="container">
+        <h1>Our Work Gallery</h1>
+        <p>Browse through our completed projects</p>
+    </div>
+</section>
+
+<div class="gallery-filters">
+    <div class="container">
+        <button class="filter-btn {% if current_category == 'all' %}active{% endif %}" data-category="all">All</button>
+        <button class="filter-btn {% if current_category == 'Residential' %}active{% endif %}" data-category="Residential">Residential</button>
+        <button class="filter-btn {% if current_category == 'Commercial' %}active{% endif %}" data-category="Commercial">Commercial</button>
+        <button class="filter-btn {% if current_category == 'Renovation' %}active{% endif %}" data-category="Renovation">Renovation</button>
+    </div>
+</div>
+
+<section class="gallery-section">
+    <div class="container">
+        <div class="gallery-grid">
+            {% for image in images %}
+            <div class="gallery-item" data-category="{{ image.category }}">
+                <img src="{{ image.image_path }}" alt="{{ image.title }}">
+                <div class="gallery-overlay">
+                    <h3>{{ image.title }}</h3>
+                    <p>{{ image.description }}</p>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-center">No images available yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const category = btn.dataset.category;
+        window.location.href = `/gallery?category=${category}`;
+    });
+});
+</script>
+{% endblock %}

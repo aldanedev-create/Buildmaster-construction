@@ -1,0 +1,55 @@
+{% extends "includes/header.html" %}
+
+{% block title %}My Projects{% endblock %}
+
+{% block content %}
+<section class="projects-header">
+    <div class="container">
+        <h1>My Projects</h1>
+        <p>Track and manage your construction projects</p>
+    </div>
+</section>
+
+<div class="container">
+    {% if projects %}
+    <div class="projects-list">
+        {% for project in projects %}
+        <div class="project-card">
+            <div class="project-header">
+                <h3>Project #{{ project.project_id }}</h3>
+                <span class="badge badge-{{ project.status|lower }}">{{ project.status }}</span>
+            </div>
+            <div class="project-body">
+                <p><strong>Service:</strong> {{ project.service_name }}</p>
+                <p><strong>Location:</strong> {{ project.location }}</p>
+                <p><strong>Budget:</strong> ${{ '{:,.2f}'.format(project.budget) if project.budget else 'N/A' }}</p>
+                <p><strong>Created:</strong> {{ project.created_at }}</p>
+                {% if project.customer_name %}
+                <p><strong>Customer:</strong> {{ project.customer_name }}</p>
+                {% endif %}
+                <div class="progress-bar">
+                    <div class="progress" style="width: 
+                        {% if project.status == 'Pending' %}10%
+                        {% elif project.status == 'Confirmed' %}25%
+                        {% elif project.status == 'In Progress' %}60%
+                        {% elif project.status == 'Completed' %}100%
+                        {% else %}0%{% endif %}">
+                    </div>
+                </div>
+            </div>
+            <div class="project-footer">
+                <a href="/project/{{ project.project_id }}" class="btn-primary">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-folder-open"></i>
+        <h3>No Projects Yet</h3>
+        <p>You haven't submitted any project requests yet.</p>
+        <a href="/request-quote" class="btn-primary">Request a Quote</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

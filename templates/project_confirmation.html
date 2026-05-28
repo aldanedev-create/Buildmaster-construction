@@ -1,0 +1,38 @@
+{% extends "includes/header.html" %}
+
+{% block title %}Request Submitted{% endblock %}
+
+{% block content %}
+<div class="confirmation-container">
+    <div class="confirmation-card">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h1>Request Submitted Successfully!</h1>
+        <p>Thank you for choosing BuildMaster Construction</p>
+        
+        <div class="confirmation-details">
+            <h3>Project Details</h3>
+            <p><strong>Project ID:</strong> #{{ project.project_id }}</p>
+            <p><strong>Service:</strong> {{ project.service_name }}</p>
+            <p><strong>Status:</strong> <span class="badge badge-pending">Pending Review</span></p>
+        </div>
+        
+        <div class="confirmation-actions">
+            <p>What happens next?</p>
+            <ul>
+                <li>Our team will review your request within 24 hours</li>
+                <li>You will receive a confirmation via email/WhatsApp</li>
+                <li>A project manager will contact you to discuss details</li>
+            </ul>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/projects" class="btn-primary">View My Projects</a>
+            <a href="/" class="btn-secondary">Return Home</a>
+        </div>
+        
+        <div class="whatsapp-contact">
+            <p>Have questions? <a href="https://wa.me/18765550123?text=Hi%2C%20I%20have%20a%20question%20about%20project%20%23{{ project.project_id }}" target="_blank">Chat with us on WhatsApp</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

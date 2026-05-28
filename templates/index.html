@@ -1,0 +1,79 @@
+{% extends "includes/header.html" %}
+
+{% block title %}Home - BuildMaster Construction{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Quality Construction Services</h1>
+    <p>Building Dreams, Creating Excellence Since 2000</p>
+    <a href="/request-quote" class="btn-primary">Get Free Quote</a>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2>Why Choose Us?</h2>
+        <div class="features-grid">
+            <div class="feature">
+                <i class="fas fa-trophy"></i>
+                <h3>15+ Years Experience</h3>
+                <p>Proven track record of quality construction</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-users"></i>
+                <h3>Expert Team</h3>
+                <p>Skilled professionals in every trade</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-clock"></i>
+                <h3>On-Time Delivery</h3>
+                <p>Projects completed within deadline</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-handshake"></i>
+                <h3>Satisfaction Guaranteed</h3>
+                <p>100% customer satisfaction</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="featured-services">
+    <div class="container">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+            {% for service in services %}
+            <div class="service-card">
+                <img src="{{ url_for('static', filename='images/services/default.jpg') if not service.image_path else service.image_path }}" alt="{{ service.service_name }}">
+                <h3>{{ service.service_name }}</h3>
+                <p>{{ service.description[:100] }}...</p>
+                <a href="/request-quote?service={{ service.service_id }}" class="btn-primary">Request Quote</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="recent-projects">
+    <div class="container">
+        <h2>Recent Projects</h2>
+        <div class="projects-grid">
+            {% for project in projects %}
+            <div class="project-card">
+                <h3>Project #{{ project.project_id }}</h3>
+                <p>Status: <span class="badge badge-{{ project.status|lower }}">{{ project.status }}</span></p>
+            </div>
+            {% else %}
+            <p>No projects yet. Be the first to work with us!</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container">
+        <h2>Ready to Start Your Project?</h2>
+        <p>Contact us today for a free consultation and quote</p>
+        <a href="/contact" class="btn-primary">Contact Us</a>
+    </div>
+</section>
+{% endblock %}

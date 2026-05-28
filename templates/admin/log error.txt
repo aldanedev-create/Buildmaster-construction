@@ -1,0 +1,3 @@
+fix gallery page
+
+projects must only be availbe to that specfiic customer home page

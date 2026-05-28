@@ -1,0 +1,52 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_title %}Project Report{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Project Report</h1>
+    <a class="btn-secondary" href="/admin/reports/export_csv/projects?date_from={{ date_from }}&date_to={{ date_to }}">Export CSV</a>
+</div>
+
+<form method="GET" class="filter-form">
+    <input type="date" name="date_from" value="{{ date_from }}">
+    <input type="date" name="date_to" value="{{ date_to }}">
+    <select name="status">
+        <option value="">All Statuses</option>
+        <option value="Pending" {% if status == 'Pending' %}selected{% endif %}>Pending</option>
+        <option value="Confirmed" {% if status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+        <option value="In Progress" {% if status == 'In Progress' %}selected{% endif %}>In Progress</option>
+        <option value="Completed" {% if status == 'Completed' %}selected{% endif %}>Completed</option>
+    </select>
+    <button type="submit" class="btn-primary">Filter</button>
+</form>
+
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.total_projects }}</h3><p>Total</p></div></div>
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.pending }}</h3><p>Pending</p></div></div>
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.in_progress }}</h3><p>In Progress</p></div></div>
+    <div class="stat-card"><div class="stat-info"><h3>{{ stats.unassigned }}</h3><p>Unassigned</p></div></div>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr><th>ID</th><th>Customer</th><th>Contact</th><th>Service</th><th>Status</th><th>Manager</th><th>Updates</th></tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+        <tr>
+            <td>#{{ project.project_id }}</td>
+            <td>{{ project.customer_name }}</td>
+            <td>{{ project.customer_email }}<br>{{ project.customer_phone }}</td>
+            <td>{{ project.service_name }}</td>
+            <td>{{ project.status }}</td>
+            <td>{{ project.manager_name or 'Unassigned' }}</td>
+            <td>{{ project.update_count }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7">No projects found for this period.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

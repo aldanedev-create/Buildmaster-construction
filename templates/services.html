@@ -1,0 +1,50 @@
+{% extends "includes/header.html" %}
+
+{% block title %}Our Services{% endblock %}
+
+{% block content %}
+<section class="services-header">
+    <div class="container">
+        <h1>Our Construction Services</h1>
+        <p>Comprehensive solutions for all your construction needs</p>
+    </div>
+</section>
+
+<section class="all-services">
+    <div class="container">
+        <div class="services-grid">
+            {% for service in services %}
+            <div class="service-card">
+                <img src="{{ service.image_path or url_for('static', filename='images/services/default.jpg') }}" alt="{{ service.service_name }}">
+                <div class="service-info">
+                    <h3>{{ service.service_name }}</h3>
+                    <p>{{ service.description }}</p>
+                    <div class="service-category">{{ service.category }}</div>
+                    <a href="/request-quote?service={{ service.service_id }}" class="btn-primary">Request Quote</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="why-services">
+    <div class="container">
+        <h2>Why Choose Our Services?</h2>
+        <div class="benefits-grid">
+            <div class="benefit">
+                <i class="fas fa-check-circle"></i>
+                <h3>Licensed & Insured</h3>
+            </div>
+            <div class="benefit">
+                <i class="fas fa-check-circle"></i>
+                <h3>Free Estimates</h3>
+            </div>
+            <div class="benefit">
+                <i class="fas fa-check-circle"></i>
+                <h3>Warranty Included</h3>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
