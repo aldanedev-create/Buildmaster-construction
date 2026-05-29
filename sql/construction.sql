@@ -178,7 +178,7 @@ CREATE INDEX IF NOT EXISTS idx_activity_logs_timestamp ON activity_logs(timestam
 CREATE INDEX IF NOT EXISTS idx_two_fa_codes_user ON two_fa_codes(user_id);
 CREATE INDEX IF NOT EXISTS idx_security_alerts_status ON security_alerts(status);
 
--- Insert default Super Admin (password: Admin@123)
+-- Insert default Super Admin
 INSERT OR IGNORE INTO users (name, email, phone, password_hash, role, account_status, two_factor_enabled)
 VALUES ('Super Admin', 'aldanehutchinson5@gmail.com', '+1234567890', 
         'pbkdf2:sha256:600000$codexsalt$8c740571300d4cc57925fd098f579c2200e95af2c66a444edd20358177ccbc91', 
